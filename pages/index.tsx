@@ -76,7 +76,7 @@ export default function Home() {
             type="number"
           />
 
-          <button className="primary" onClick={() => handleCreateQr()}>
+          <button className="royal" onClick={() => handleCreateQr()}>
             <img
               style={{ filter: 'invert(1)' }}
               width={24}
