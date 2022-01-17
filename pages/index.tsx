@@ -79,7 +79,7 @@ export default function Home() {
           <button className="royal" onClick={() => handleCreateQr()}>
             <img
               style={{ filter: 'invert(1)' }}
-              width={24}
+              width={32}
               src="/qr.png"
               alt="QR Icon"
             />
