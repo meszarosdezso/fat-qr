@@ -1,9 +1,13 @@
 import QRCodeStyling from 'qr-code-styling'
 import { v4 } from 'uuid'
 
+interface QrOptions {
+  color?: string
+}
+
 let QrCode: typeof QRCodeStyling | null = null
 
-export async function createCode(count: number) {
+export async function createCode(count: number, options?: QrOptions) {
   if (QrCode === null) {
     QrCode = (await import('qr-code-styling')).default
   }
@@ -22,8 +26,11 @@ export async function createCode(count: number) {
         qrOptions: {
           errorCorrectionLevel: 'H',
         },
+        backgroundOptions: {
+          color: '#0000',
+        },
         dotsOptions: {
-          color: '#f47820',
+          color: `#${options?.color}`,
           type: 'dots',
         },
         cornersSquareOptions: {

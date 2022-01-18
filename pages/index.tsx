@@ -5,31 +5,42 @@ import Zip from 'jszip'
 import FileSaver from 'file-saver'
 import { PuffLoader } from 'react-spinners'
 import QRCodeStyling from 'qr-code-styling'
+import { useRouter } from 'next/router'
 
 export default function Home() {
   const [loading, setLoading] = useState(false)
 
-  const qrsRef = useRef<any>()
+  const qrsRef = useRef<HTMLDivElement>()
   const countRef = useRef<HTMLInputElement>()
+
+  const router = useRouter()
 
   const handleCreateQr = async () => {
     setLoading(true)
     const start = performance.now()
     const count = parseInt(countRef.current?.value || '1')
-    if (count < 1) return
+    if (count < 1) {
+      setLoading(false)
+      return
+    }
+
+    const color = (router.query['color'] as string) ?? 'f47820'
+
     const codes: QRCodeStyling[] = []
 
     console.log(`Creating ${count} codes...`)
 
     for (let i = 0; i < Math.floor(count / 100); i += 1) {
-      const chunk = await createCode(100)
+      const chunk = await createCode(100, { color })
       codes.push(...chunk)
       console.log(`Chunk ${i + 1} is ready.`)
     }
 
     const remaining = count % 100
     console.log(`${remaining} remaining...`)
-    codes.push(...(await createCode(remaining)))
+    codes.push(...(await createCode(remaining, { color })))
+
+    codes[0].append(qrsRef.current)
 
     console.log('Chunks created. Zipping files...')
 
@@ -65,13 +76,11 @@ export default function Home() {
       <p className="body-text mb-6">Create fancy QR codes for UUIDs.</p>
 
       {loading ? (
-        <div>
-          <PuffLoader color="#f47820" />
-        </div>
+        <PuffLoader color="var(--royal-100)" />
       ) : (
         <div className="centered mb-2">
           <input
-            className="mr-2 mb-2"
+            className="mb-2"
             placeholder="Count"
             ref={countRef as MutableRefObject<HTMLInputElement>}
             type="number"
@@ -89,7 +98,10 @@ export default function Home() {
         </div>
       )}
 
-      <div className="my-8" ref={qrsRef}></div>
+      <div
+        className="my-8"
+        ref={qrsRef as MutableRefObject<HTMLDivElement>}
+      ></div>
 
       <footer style={{ fontSize: '.6em', color: '#aaa' }}>
         Created with{' '}
