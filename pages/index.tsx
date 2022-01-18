@@ -16,6 +16,7 @@ export default function Home() {
     setLoading(true)
     const start = performance.now()
     const count = parseInt(countRef.current?.value || '1')
+    if (count < 1) return
     const codes: QRCodeStyling[] = []
 
     console.log(`Creating ${count} codes...`)
