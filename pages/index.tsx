@@ -24,7 +24,7 @@ export default function Home() {
       return
     }
 
-    const color = (router.query['color'] as string) ?? 'f47820'
+    const color = (router.query['color'] as string) ?? 'ffffff'
 
     const codes: QRCodeStyling[] = []
 
